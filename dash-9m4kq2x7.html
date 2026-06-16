@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jared Orr · Dropstep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     DROPSTEP CLIENT DASHBOARD — Jared Orr
+     ------------------------------------------------------------
+     >>> TO UPDATE: edit ONLY the "DASHBOARD_DATA" block in the
+     >>> <script> at the bottom. Use REAL numbers + REAL brands.
+     ============================================================ */
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root{
+    --gold:#C9A84C; --gold-dim:#8B6914; --gold-glow:rgba(201,168,76,0.15);
+    --black:#070707; --surface:#101010; --surface2:#161616; --surface3:#1E1E1E;
+    --border:#242424; --text:#F0EDE8; --text-secondary:#888; --text-muted:#444;
+    --green:#2ECC71; --green-dim:rgba(46,204,113,0.15);
+    --blue:#3498DB; --blue-dim:rgba(52,152,219,0.15);
+    --purple:#9B59B6; --purple-dim:rgba(155,89,182,0.15);
+    --amber:#E67E22; --amber-dim:rgba(230,126,34,0.15);
+  }
+  *{font-family:'Poppins',sans-serif;}
+  h1,h2,h3,.display,.stat-value,.logo-text{font-family:'Rajdhani',sans-serif !important;}
+  body{background:var(--black);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;padding:30px 22px 60px;
+    background-image:radial-gradient(1100px 460px at 82% -12%, rgba(201,168,76,.07), transparent 60%);}
+  .wrap{max-width:1060px;margin:0 auto;}
+
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:14px;}
+  .logo-text{font-size:22px;font-weight:800;letter-spacing:-.5px;}
+  .logo-text span{color:var(--gold);}
+  .top-right{display:flex;align-items:center;gap:14px;}
+  .who{font-size:13px;color:var(--text-secondary);}
+  .who b{color:var(--text);font-weight:600;}
+  .plan-tag{font-size:11px;color:var(--gold);border:1px solid rgba(201,168,76,.3);background:var(--gold-glow);padding:5px 11px;border-radius:999px;font-weight:600;letter-spacing:.3px;}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+  .card .label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:10px;}
+  .card .stat-value{font-size:38px;font-weight:700;letter-spacing:-1px;line-height:1;}
+  .card .sub{font-size:11.5px;color:var(--text-muted);margin-top:8px;}
+  .card .sub.good{color:var(--green);}
+  .bar{height:5px;border-radius:99px;background:var(--surface3);margin-top:13px;overflow:hidden;}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#E2C27D);border-radius:99px;}
+
+  .lower{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .panel-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;}
+  .panel-head h2{font-size:16px;font-weight:700;letter-spacing:1px;}
+  .panel-head .meta{font-size:11px;color:var(--text-muted);}
+
+  table{width:100%;border-collapse:collapse;}
+  th{padding:11px 20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-align:left;font-weight:600;border-bottom:1px solid var(--border);}
+  td{padding:13px 20px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  td.brand{font-weight:500;}
+  td.dim{color:var(--text-secondary);}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 11px;border-radius:20px;}
+  .pill.interested{color:var(--green);background:var(--green-dim);}
+  .pill.pitched{color:var(--green);background:var(--green-dim);}
+  .pill.negotiating{color:var(--amber);background:var(--amber-dim);}
+  .pill.replied{color:var(--blue);background:var(--blue-dim);}
+  .pill.opened{color:var(--purple);background:var(--purple-dim);}
+
+  .empty{text-align:center;padding:40px 20px;color:var(--text-secondary);}
+  .empty .ico{font-size:28px;margin-bottom:12px;}
+  .empty h3{color:var(--text);font-size:15px;font-weight:600;margin-bottom:7px;font-family:'Poppins',sans-serif;}
+  .empty p{font-size:13px;max-width:330px;margin:0 auto;line-height:1.55;}
+
+  .feed{padding:8px 0;}
+  .item{display:flex;align-items:flex-start;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);}
+  .item:last-child{border-bottom:none;}
+  .item .dot{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--surface3);}
+  .item .body{font-size:13px;color:var(--text);font-weight:500;line-height:1.4;}
+  .item .body b{font-weight:600;}
+  .item .time{font-size:11px;color:var(--text-muted);margin-top:3px;}
+
+  .foot{margin-top:26px;text-align:center;font-size:11px;color:var(--text-muted);letter-spacing:.3px;}
+
+  #gate{position:fixed;inset:0;background:var(--black);display:grid;place-items:center;z-index:50;
+    background-image:radial-gradient(900px 400px at 50% 0%, rgba(201,168,76,.08), transparent 60%);}
+  #gate .box{width:330px;max-width:90vw;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px;text-align:center;}
+  #gate .logo-text{font-size:24px;margin-bottom:8px;}
+  #gate p{font-size:13px;color:var(--text-secondary);margin-bottom:20px;}
+  #gate input{width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;margin-bottom:10px;}
+  #gate input:focus{outline:none;border-color:var(--gold);}
+  #gate button{width:100%;padding:12px;background:var(--gold);color:var(--black);border:none;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer;font-family:'Poppins',sans-serif;}
+  #gate button:hover{background:#E2C27D;}
+  #gate .err{color:var(--red,#E74C3C);font-size:12px;height:16px;margin-top:8px;}
+
+  @media(max-width:820px){ .stats{grid-template-columns:repeat(2,1fr);} .lower{grid-template-columns:1fr;} }
+  @media(max-width:480px){ .stats{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<!-- ===== BASIC LOGIN GATE — NOT real security (code is in page source).
+     Best privacy = host at an unguessable URL, don't link it publicly.
+     Remove gate: delete this div + the gate script. Change code: GATE_PASSWORD below. ===== -->
+<div id="gate">
+  <div class="box">
+    <div class="logo-text">drop<span>step</span></div>
+    <p>Enter your access code to view your dashboard.</p>
+    <input id="gatePw" type="password" placeholder="Access code" autocomplete="off">
+    <button onclick="checkGate()">View dashboard</button>
+    <div class="err" id="gateErr"></div>
+  </div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <div class="top">
+    <div class="logo-text">drop<span>step</span></div>
+    <div class="top-right">
+      <div class="who">Dashboard for <b id="clientName"></b></div>
+      <div class="plan-tag" id="planTag"></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="card">
+      <div class="label">Pitches Sent</div>
+      <div class="stat-value" id="sPitches">0</div>
+      <div class="sub" id="sPitchesSub"></div>
+      <div class="bar"><i id="sPitchesBar" style="width:0%"></i></div>
+    </div>
+    <div class="card">
+      <div class="label">Brand Replies</div>
+      <div class="stat-value" id="sReplies">0</div>
+      <div class="sub good" id="sRepliesSub"></div>
+    </div>
+    <div class="card">
+      <div class="label">Brands Interested</div>
+      <div class="stat-value" id="sInterested">0</div>
+      <div class="sub" id="sInterestedSub"></div>
+    </div>
+    <div class="card">
+      <div class="label">Follow-ups Sent</div>
+      <div class="stat-value" id="sFollow">0</div>
+      <div class="sub good" id="sFollowSub"></div>
+    </div>
+  </div>
+
+  <div class="lower">
+    <div class="panel">
+      <div class="panel-head"><h2>Brand Outreach Log</h2><span class="meta" id="logMeta"></span></div>
+      <div id="logArea"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Activity</h2><span class="meta">Most recent</span></div>
+      <div class="feed" id="feedArea"></div>
+    </div>
+  </div>
+
+  <div class="foot">Dropstep · pitches sent on your behalf · you keep 100% of every deal</div>
+</div>
+
+<script>
+/* ================================================================
+   ▼▼▼  EDIT BELOW TO UPDATE JARED'S DASHBOARD  ▼▼▼
+   REAL numbers + REAL brands only — this is what your customer sees.
+   ================================================================ */
+
+const GATE_PASSWORD = "jared2026";   // access code you give Jared
+
+const DASHBOARD_DATA = {
+  client:        "Jared Orr",
+  plan:          "UGC · 100 pitches/mo",
+  monthlyTarget: 100,
+
+  // Top stats — set from your real Instantly data
+  pitchesSent: 0,
+  replies:     0,
+  interested:  0,
+  followUps:   0,
+
+  // Brand Outreach Log — add a row ONLY when a real pitch goes out.
+  // status: "pitched" | "opened" | "replied" | "negotiating" | "interested"
+  // Example: { brand:"Olipop", dealType:"Paid Post", status:"pitched", lastContact:"Jun 16", nextFollowUp:"Jun 19" },
+  outreachLog: [
+    // empty until first real batch sends
+  ],
+
+  // Activity feed — real events only
+  activity: [
+    { icon:"🛠️", text:"<b>Your page is being built</b> — live within 48 hours", time:"Today" },
+    { icon:"✅", text:"<b>Welcome to Dropstep</b> — account active", time:"Today" }
+  ]
+};
+
+/* ================================================================
+   ▲▲▲  STOP EDITING — layout logic below  ▲▲▲
+   ================================================================ */
+
+function checkGate(){
+  if(document.getElementById('gatePw').value === GATE_PASSWORD){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    render();
+  } else {
+    document.getElementById('gateErr').textContent="Incorrect code — try again.";
+  }
+}
+document.getElementById('gatePw').addEventListener('keydown',e=>{if(e.key==='Enter')checkGate();});
+
+function render(){
+  const d=DASHBOARD_DATA;
+  document.getElementById('clientName').textContent=d.client;
+  document.getElementById('planTag').textContent=d.plan;
+
+  document.getElementById('sPitches').textContent=d.pitchesSent;
+  document.getElementById('sPitchesSub').textContent=d.monthlyTarget+" total this month";
+  document.getElementById('sPitchesBar').style.width=Math.min(100,Math.round(d.pitchesSent/d.monthlyTarget*100))+"%";
+
+  document.getElementById('sReplies').textContent=d.replies;
+  document.getElementById('sRepliesSub').textContent=d.pitchesSent>0?(d.replies/d.pitchesSent*100).toFixed(1)+"% response rate":"Batch launching";
+
+  document.getElementById('sInterested').textContent=d.interested;
+  document.getElementById('sInterestedSub').textContent=d.interested>0?"Ready for you to close":"Actively pitching";
+
+  document.getElementById('sFollow').textContent=d.followUps;
+  document.getElementById('sFollowSub').textContent=d.followUps>0?"Automated — zero effort":"Kick in after day 3";
+
+  const logArea=document.getElementById('logArea'), logMeta=document.getElementById('logMeta');
+  if(d.outreachLog.length===0){
+    logMeta.textContent="";
+    logArea.innerHTML=`<div class="empty"><div class="ico">📨</div><h3>Your first pitches are on the way</h3><p>As soon as your page is live, personalized pitches start going out to brands. Every brand we contact shows up here — with live status as they open, reply, and engage.</p></div>`;
+  } else {
+    logMeta.textContent=d.pitchesSent+" sent · "+d.replies+" replies";
+    const rows=d.outreachLog.map(r=>`<tr><td class="brand">${r.brand}</td><td class="dim">${r.dealType}</td><td><span class="pill ${r.status}">${r.status.charAt(0).toUpperCase()+r.status.slice(1)}</span></td><td class="dim">${r.lastContact}</td><td class="dim">${r.nextFollowUp||"—"}</td></tr>`).join("");
+    logArea.innerHTML=`<table><thead><tr><th>Brand</th><th>Deal Type</th><th>Status</th><th>Last Contact</th><th>Next Follow-up</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  document.getElementById('feedArea').innerHTML=d.activity.map(a=>`<div class="item"><div class="dot">${a.icon}</div><div><div class="body">${a.text}</div><div class="time">${a.time}</div></div></div>`).join("");
+}
+</script>
+</body>
+</html>
